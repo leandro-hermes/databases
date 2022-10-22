@@ -17,6 +17,8 @@ services:
       test: [ "CMD", "pg_isready", "-q", "-d", "${PGSQL_DATABASE}", "-U", "${PGSQL_USERNAME}" ]
       retries: 3
       timeout: 5s
+    networks:
+      - databases
   mysql:
     image: 'mysql/mysql-server:8.0'
     container_name: databases_mysql
@@ -35,3 +37,12 @@ services:
       test: [ "CMD", "mysqladmin", "ping", "-p${MYSQL_PASSWORD}" ]
       retries: 3
       timeout: 5s
+    networks:
+      - databases
+networks:
+  databases:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
